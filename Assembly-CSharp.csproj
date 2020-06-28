@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{6DA90294-C87F-FD89-3C56-A47585D6BD17}</ProjectGuid>
+    <ProjectGuid>{FCD95271-52D4-DB27-8CC1-AA6833B9056F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -356,31 +356,31 @@
     <None Include="Assets\VacuumShaders\Advanced Dissolve\Shaders\Legacy\Normal-Parallax.shader" />
     <None Include="Assets\VacuumShaders\Advanced Dissolve\Shaders\Nature\SoftOcclusion\UnityBuiltin2xTreeLibrary.cginc" />
     <Reference Include="Unity.Timeline.Editor">
-      <HintPath>C:/Users/SCL01/TaikiTakami/Spatial History[nreal]/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
+      <HintPath>C:/Users/takam/Unity Project/Spatial History with nreal/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VSCode.Editor">
-      <HintPath>C:/Users/SCL01/TaikiTakami/Spatial History[nreal]/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
+      <HintPath>C:/Users/takam/Unity Project/Spatial History with nreal/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>C:/Users/SCL01/TaikiTakami/Spatial History[nreal]/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>C:/Users/takam/Unity Project/Spatial History with nreal/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>C:/Users/SCL01/TaikiTakami/Spatial History[nreal]/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+      <HintPath>C:/Users/takam/Unity Project/Spatial History with nreal/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline">
-      <HintPath>C:/Users/SCL01/TaikiTakami/Spatial History[nreal]/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
+      <HintPath>C:/Users/takam/Unity Project/Spatial History with nreal/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
     </Reference>
     <Reference Include="Unity.CollabProxy.Editor">
-      <HintPath>C:/Users/SCL01/TaikiTakami/Spatial History[nreal]/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+      <HintPath>C:/Users/takam/Unity Project/Spatial History with nreal/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Rider.Editor">
-      <HintPath>C:/Users/SCL01/TaikiTakami/Spatial History[nreal]/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
+      <HintPath>C:/Users/takam/Unity Project/Spatial History with nreal/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>C:/Users/SCL01/TaikiTakami/Spatial History[nreal]/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>C:/Users/takam/Unity Project/Spatial History with nreal/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.UI">
-      <HintPath>C:/Users/SCL01/TaikiTakami/Spatial History[nreal]/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+      <HintPath>C:/Users/takam/Unity Project/Spatial History with nreal/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.2.17f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
@@ -554,22 +554,22 @@
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.2.17f1/Editor/Data/Managed/UnityEngine/UnityEngine.XRModule.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>C:/Users/SCL01/TaikiTakami/Spatial History[nreal]/Assets/NRSDK/Plugins/ICSharpCode.SharpZipLib.dll</HintPath>
+      <HintPath>C:/Users/takam/Unity Project/Spatial History with nreal/Assets/NRSDK/Plugins/ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="LitJSON">
-      <HintPath>C:/Users/SCL01/TaikiTakami/Spatial History[nreal]/Assets/NRSDK/Plugins/LitJSON.dll</HintPath>
+      <HintPath>C:/Users/takam/Unity Project/Spatial History with nreal/Assets/NRSDK/Plugins/LitJSON.dll</HintPath>
     </Reference>
     <Reference Include="NRToolkit.Sharing.Client">
-      <HintPath>C:/Users/SCL01/TaikiTakami/Spatial History[nreal]/Assets/NRSDK/Scripts/Sharing/Plugins/x64/NRToolkit.Sharing.Client.dll</HintPath>
+      <HintPath>C:/Users/takam/Unity Project/Spatial History with nreal/Assets/NRSDK/Scripts/Sharing/Plugins/x64/NRToolkit.Sharing.Client.dll</HintPath>
     </Reference>
     <Reference Include="NRToolkit.Sharing.ClientEngine">
-      <HintPath>C:/Users/SCL01/TaikiTakami/Spatial History[nreal]/Assets/NRSDK/Scripts/Sharing/Plugins/x64/NRToolkit.Sharing.ClientEngine.dll</HintPath>
+      <HintPath>C:/Users/takam/Unity Project/Spatial History with nreal/Assets/NRSDK/Scripts/Sharing/Plugins/x64/NRToolkit.Sharing.ClientEngine.dll</HintPath>
     </Reference>
     <Reference Include="NRToolkit.Sharing.ProtoBase">
-      <HintPath>C:/Users/SCL01/TaikiTakami/Spatial History[nreal]/Assets/NRSDK/Scripts/Sharing/Plugins/x64/NRToolkit.Sharing.ProtoBase.dll</HintPath>
+      <HintPath>C:/Users/takam/Unity Project/Spatial History with nreal/Assets/NRSDK/Scripts/Sharing/Plugins/x64/NRToolkit.Sharing.ProtoBase.dll</HintPath>
     </Reference>
     <Reference Include="protobuf-net">
-      <HintPath>C:/Users/SCL01/TaikiTakami/Spatial History[nreal]/Assets/NRSDK/Scripts/Sharing/Plugins/x64/protobuf-net.dll</HintPath>
+      <HintPath>C:/Users/takam/Unity Project/Spatial History with nreal/Assets/NRSDK/Scripts/Sharing/Plugins/x64/protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.2.17f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
