@@ -8,10 +8,12 @@ using UnityEngine.Events;
 using static Utils.Utility;
 using NRKernal;
 
+
 public class MainManager : MonoBehaviour
 {
     #region フィールド
 
+    public float amp;
     StateProcessor stateProcessor = new StateProcessor();
 
     [SerializeField] Transform controllerTip;
@@ -31,6 +33,19 @@ public class MainManager : MonoBehaviour
 
     [SerializeField] CharacterController characterController;
 
+    [SerializeField] Transform gizmo;
+
+    [SerializeField] GameObject pin;
+
+    [SerializeField] Transform player1;
+
+    [SerializeField] GameObject headposeCanvas;
+    [SerializeField] Image controllerImg;
+    [SerializeField] Sprite controllerImg_src1;
+    [SerializeField] Sprite controllerImg_src2;
+
+    [SerializeField] GameObject explainPanel;
+
     private GameObject freeChoiceTargetNode;
 
     [SerializeField] Transform sphereDissolve;
@@ -45,7 +60,11 @@ public class MainManager : MonoBehaviour
 
     private bool isFreeChoice = false;
 
+    public bool isFirstPress = false;
     private bool isAwakePress = false;
+
+    private bool isPinSetupped = false;
+    private bool isGizmoManipulate = false;
 
     public float awakeWaitSpeed = 2.42f;
     public float awakeSpeed;
@@ -60,12 +79,6 @@ public class MainManager : MonoBehaviour
     [SerializeField] AudioClip clip_Select, clip_PreSelect;
     [SerializeField] AudioClip clip_Intro, clip_OpeExplain;
     [SerializeField] AudioClip clip_worldMake;
-    //[SerializeField] Text timeText;
-    //[SerializeField] Text dateText;
-    //private bool isTimeWatching = false;
-    //public float timeTransSpeed = 1f;
-    //private float touchCount = 0;
-    //private bool isDeltaTouch = false;
 
     [Header("城")]
     public GameObject[] castles;
@@ -105,7 +118,6 @@ public class MainManager : MonoBehaviour
     #endregion
 
     private Dictionary<string, int> nodeDictionary = new Dictionary<string, int>();
-    //private VideoCapture capture;
 
     #endregion
 
@@ -144,7 +156,7 @@ public class MainManager : MonoBehaviour
     void Start()
     {
         indicater.gameObject.SetActive(false);
-        stateProcessor.SetState(ST_Awake);
+        stateProcessor.SetState(ST_Setup);
         //capture = GetComponent<VideoCapture>();
     }
 
@@ -153,53 +165,43 @@ public class MainManager : MonoBehaviour
         if (NRInput.GetButtonDown(ControllerButton.TRIGGER))
             ML_OnTriggerDown();
 
-        if (Application.isEditor && Input.GetKeyDown(KeyCode.Space))
-            ML_OnTriggerDown();
+        if (NRInput.GetButtonUp(ControllerButton.TRIGGER))
+            isGizmoManipulate = false;
 
+        if (isGizmoManipulate)
+        {
+            Vector3 aim = gizmo.position - Camera.main.transform.position;
+            aim.y *= 0;
+            var look = Quaternion.LookRotation(aim);
+            gizmo.rotation = look;
 
-        #region time watch
-
-        //if (NRInput.GetButtonDown(ControllerButton.APP))
-        //{
-        //    if (capture.m_VideoCapture.IsRecording)
-        //    {
-        //        capture.StopVideoCapture();
-        //    }
-        //    else
-        //    {
-        //        capture.StartVideoCapture();
-        //    }
-        //}
-
-        //if (NRInput.GetTouch() != Vector2.zero)
-        //{
-        //    touchCount += Time.deltaTime;
-        //}
-        //else
-        //{
-        //    if (0 < touchCount && touchCount < 0.5f)
-        //        isDeltaTouch = true;
-        //    touchCount = 0;
-        //}
-
-        //if (!isTimeWatching && isDeltaTouch)
-        //{
-        //    isTimeWatching = true;
-        //    isDeltaTouch = false;
-        //    StartCoroutine(TimeWatch());
-        //}
-
-        #endregion
-
+            gizmo.transform.position = controllerTip.position + controllerTip.forward * 0.7f;
+        }
         stateProcessor.Update();
     }
+
+    #region セットアップ
+
+    public void ST_Setup(bool isFirst)
+    {
+        if (isFirst)
+        {
+            StartCoroutine(PinTutorial());
+        }
+        else
+        {
+            if (!isPinSetupped)
+                pin.transform.position = controllerTip.position + controllerTip.forward;
+        }
+    }
+
+    #endregion
 
     #region アウェイクステート
     public void ST_Awake(bool isFirst)
     {
         if (isFirst)
         {
-            isFreeChoice = false;
             StartCoroutine(GameAwake());
         }
         else
@@ -208,7 +210,7 @@ public class MainManager : MonoBehaviour
             //ここに「Press」の点滅とか
             if (!isAwakePress)
             {
-                sphereDissolve.localScale += Vector3.one * 0.0006f * Mathf.Sin(Time.realtimeSinceStartup * awakeWaitSpeed);
+                sphereDissolve.localScale += Vector3.one * amp * Mathf.Sin(Time.realtimeSinceStartup * awakeWaitSpeed);
             }
         }
     }
@@ -220,6 +222,7 @@ public class MainManager : MonoBehaviour
         //初期処理
         if (isFirst)
         {
+            isFreeChoice = false;
         }
         //継続処理
         else
@@ -365,15 +368,36 @@ public class MainManager : MonoBehaviour
 
     #region サブルーチン
 
+    IEnumerator SetPosition()
+    {
+        gizmo.position += pin.transform.position - player1.position;
+        float t = 0;
+        Vector3 max = Vector3.one * 0.13f;
+        while (IsReaching(ref t, 0.001f, 0.15f))
+        {
+            sphereDissolve.localScale = Vector3.Lerp(sphereDissolve.localScale, max, t);
+            yield return null;
+        }
+        Destroy(pin);
+        stateProcessor.SetState(ST_Awake);
+    }
+
     IEnumerator GameAwake()
     {
         audio_Voice.PlayOneShot(clip_Intro);
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(10f);
         indicater.gameObject.SetActive(true);
         explainText.text = "コントローラでクリックをしましょう";
-
+        float startTime = Time.realtimeSinceStartup;
+        isFirstPress = true;
         //トリガー待ち
-        while (!isAwakePress) yield return null;
+        while (!isAwakePress)
+        {
+            if (startTime + 5f < Time.realtimeSinceStartup)
+                isAwakePress = true;
+
+            yield return null;
+        }
         explainText.text = string.Empty;
         audio_SE.PlayOneShot(clip_worldMake);
         //ジオラマの形成
@@ -384,6 +408,7 @@ public class MainManager : MonoBehaviour
         }
         castles[0].SetActive(true);
         firstOsakajoObj.SetActive(false);
+        explainPanel.SetActive(true);
         Init();
         audio_Voice.PlayOneShot(clip_OpeExplain);
         yield return new WaitForSeconds(5f);
@@ -417,7 +442,7 @@ public class MainManager : MonoBehaviour
         yield return Shrink();
         //移動
         float t = 0;
-        while (IsReaching(ref t, 0.001f, 0.2f))
+        while (IsReaching(ref t, 0.001f, 0.1f))
         {
             plane_UI.position = Vector3.Lerp(plane_UI.position, node.transform.position, t);
             yield return null;
@@ -481,6 +506,27 @@ public class MainManager : MonoBehaviour
         arrow1.transform.position = arrow1Pos;
         arrow2.transform.position = arrow2Pos;
 
+    }
+
+    IEnumerator DelayMethod(float waitTime, Action action)
+    {
+        yield return new WaitForSeconds(waitTime);
+        action();
+    }
+
+    IEnumerator PinTutorial()
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            yield return new WaitForSeconds(0.5f);
+
+            if (i % 2 == 0)
+                controllerImg.sprite = controllerImg_src1;
+            else
+                controllerImg.sprite = controllerImg_src2;
+        }
+
+        headposeCanvas.SetActive(false);
     }
 
     // 今回はつかわない
@@ -563,6 +609,10 @@ public class MainManager : MonoBehaviour
                 nodes[0].transform.tag = "NextWaitNode";
                 stateProcessor.SetState(ST_Play);
             }
+            else if (tag == "Gizmo")
+            {
+                isGizmoManipulate = true;
+            }
             else WaitStart();
         }
         else WaitStart();
@@ -609,12 +659,20 @@ public class MainManager : MonoBehaviour
     #region その他の関数
     public void WaitStart()
     {
-        if (!isAwakePress)
+        if (!isAwakePress && isFirstPress)
         {
             isAwakePress = true;
         }
         else
-            StartCoroutine(characterController.Wave());
+        {
+            if (isPinSetupped)
+                StartCoroutine(characterController.Wave());
+            else
+            {
+                isPinSetupped = true;
+                StartCoroutine(SetPosition());
+            }
+        }
     }
     /// <summary>
     /// ストーリーモードからフリーチョイスモードへ

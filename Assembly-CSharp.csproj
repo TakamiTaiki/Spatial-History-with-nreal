@@ -244,11 +244,13 @@
     <Compile Include="Assets\NRSDK\Scripts\Utility\UpdateWorldOrigin.cs" />
     <Compile Include="Assets\NRSDK\Scripts\Utility\ZipUtility.cs" />
     <Compile Include="Assets\Scripts\CharacterController.cs" />
+    <Compile Include="Assets\Scripts\HeadposeCanvas.cs" />
     <Compile Include="Assets\Scripts\MainManager.cs" />
     <Compile Include="Assets\Scripts\StateProcessor.cs" />
     <Compile Include="Assets\Scripts\UILookUser.cs" />
     <Compile Include="Assets\Scripts\Utility.cs" />
     <Compile Include="Assets\Scripts\VideoCapture.cs" />
+    <Compile Include="Assets\Scripts\Vignette.cs" />
     <Compile Include="Assets\VacuumShaders\Advanced Dissolve\Scripts\Controller_Cutout.cs" />
     <Compile Include="Assets\VacuumShaders\Advanced Dissolve\Scripts\Controller_Edge.cs" />
     <Compile Include="Assets\VacuumShaders\Advanced Dissolve\Scripts\Controller_Mask_Box.cs" />
@@ -258,7 +260,6 @@
     <Compile Include="Assets\VacuumShaders\Advanced Dissolve\Scripts\Controller_Mask_Plane.cs" />
     <Compile Include="Assets\VacuumShaders\Advanced Dissolve\Scripts\Controller_Mask_Sphere.cs" />
     <Compile Include="Assets\VacuumShaders\Advanced Dissolve\Scripts\Controller_Mask_XYZ_Axis.cs" />
-    <Compile Include="Assets\Vignette.cs" />
     <None Include="Assets\VacuumShaders\Advanced Dissolve\Shaders\Nature\TreeCreator\TreeCreatorLeavesFastOptimized.shader" />
     <None Include="Assets\VacuumShaders\Advanced Dissolve\Shaders\Standard\StandardRoughness.shader" />
     <None Include="Assets\NRSDK\Demos\RGBCamera\Materials\UVCTexture.shader" />

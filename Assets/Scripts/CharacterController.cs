@@ -12,7 +12,6 @@ public class CharacterController : MonoBehaviour
     [SerializeField] GameObject playerHead;
 
     public Transform floor;
-    [SerializeField] Transform environment;
 
     private Vector3 prePos;
 
@@ -27,9 +26,6 @@ public class CharacterController : MonoBehaviour
 
     void Update()
     {
-        if (NRInput.GetButtonDown(ControllerButton.APP))
-            environment.transform.position -= floor.up * 0.1f;
-
         float x = NRInput.GetTouch().x;
         float y = NRInput.GetTouch().y;
 

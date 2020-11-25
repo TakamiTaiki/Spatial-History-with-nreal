@@ -11,6 +11,7 @@ namespace Utils
         public static void Alignment        (GameObject from, GameObject to)    { Alignment(from.transform, to.transform); }
         public static void Alignment        (Transform from, Transform to)      { from.position = to.position; }
         public static bool Distance2D_GT    (float x, float y, float r)         { return x * x + y * y > r * r; }
+
         public static void SetStage         (int era, GameObject[] castles, GameObject[] planes)
         {
             // castles => [0]1931_First, [1]1585, [2]1585_Ash, [3]1626, [4]1626_Broken, [5]1931_End
