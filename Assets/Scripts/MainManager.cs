@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.UI;
-using State;
 using UnityEngine.Events;
 using static Utils.Utility;
 using NRKernal;
@@ -14,13 +13,11 @@ public class MainManager : MonoBehaviour
     #region フィールド
 
     public float amp;
-    StateProcessor stateProcessor = new StateProcessor();
+    private ExplainTextFactory explain;
+    private AudioFactory audio;
+    private StateFactory state;
 
     [SerializeField] Transform controllerTip;
-
-    [SerializeField] Text explainText;
-
-    [SerializeField] RectTransform indicater;
 
     [SerializeField] GameObject nodeIndicater;
 
@@ -31,7 +28,7 @@ public class MainManager : MonoBehaviour
 
     [SerializeField] GameObject dissolveBuilding;
 
-    [SerializeField] CharacterController characterController;
+    //[SerializeField] CharacterController characterController;
 
     [SerializeField] Transform gizmo;
 
@@ -56,7 +53,6 @@ public class MainManager : MonoBehaviour
     private Quaternion eraTextRotation = Quaternion.Euler(0, 0, 0);
 
     public float planeSpeed = 0.15f;
-    private Vector3 indicaterRotate = new Vector3(2f, 0, 0);
 
     private bool isFreeChoice = false;
 
@@ -72,13 +68,6 @@ public class MainManager : MonoBehaviour
 
     [SerializeField] Transform plane_UI;
     [SerializeField] Transform planeStart;
-
-    [Header("Audio"), Header("----------")]
-    [SerializeField] AudioSource audio_SE;
-    [SerializeField] AudioSource audio_Voice;
-    [SerializeField] AudioClip clip_Select, clip_PreSelect;
-    [SerializeField] AudioClip clip_Intro, clip_OpeExplain;
-    [SerializeField] AudioClip clip_worldMake;
 
     [Header("城")]
     public GameObject[] castles;
@@ -126,8 +115,6 @@ public class MainManager : MonoBehaviour
     #region イニシャライズ
     public void Init()
     {
-        //ノードが時系列になるようにソート => 今回はいらない
-        //Array.Sort(nodes, (a, b) => a.era - b.era);
         //タグと索引の初期化
         for (int i = 0; i < nodes.Length; i++)
         {
@@ -145,25 +132,26 @@ public class MainManager : MonoBehaviour
         //初期舞台セット
         SetStage(currentNode.era, castles, planes);
 
-        explainText.text = string.Empty;
+        explain.Controller.SetText(string.Empty);
         _3dStartButton.SetActive(true);
         SetNodeEffect(NodeEffect.INIT);
         //初期コンテンツを開始
-        stateProcessor.SetState(ST_Start);
+        state.Controller.SetState(ST_Start);
     }
     #endregion
 
     void Start()
     {
-        indicater.gameObject.SetActive(false);
-        stateProcessor.SetState(ST_Setup);
-        //capture = GetComponent<VideoCapture>();
+        explain = GetComponent<ExplainTextFactory>();
+        audio = GetComponent<AudioFactory>();
+        state = GetComponent<StateFactory>();
+        state.Controller.SetState(ST_Setup);
     }
 
     void Update()
     {
         if (NRInput.GetButtonDown(ControllerButton.TRIGGER))
-            ML_OnTriggerDown();
+            Nreal_OnTriggerDown();
 
         if (NRInput.GetButtonUp(ControllerButton.TRIGGER))
             isGizmoManipulate = false;
@@ -177,7 +165,6 @@ public class MainManager : MonoBehaviour
 
             gizmo.transform.position = controllerTip.position + controllerTip.forward * 0.7f;
         }
-        stateProcessor.Update();
     }
 
     #region セットアップ
@@ -206,7 +193,6 @@ public class MainManager : MonoBehaviour
         }
         else
         {
-            indicater.Rotate(indicaterRotate);
             //ここに「Press」の点滅とか
             if (!isAwakePress)
             {
@@ -228,7 +214,7 @@ public class MainManager : MonoBehaviour
         else
         {
             //他に何かあれば
-            stateProcessor.SetState(ST_Play);
+            state.Controller.SetState(ST_Play);
         }
     }
     #endregion
@@ -244,8 +230,6 @@ public class MainManager : MonoBehaviour
         //継続処理
         else
         {
-            //説明の赤印の回転
-            indicater.Rotate(indicaterRotate);
         }
     }
     #endregion
@@ -261,8 +245,6 @@ public class MainManager : MonoBehaviour
         //継続処理
         else
         {
-            //説明の赤印の回転
-            indicater.Rotate(indicaterRotate);
             Alignment(nodeSelectEffect, freeChoiceTargetNode);
             //Rayはコントローラの先端から照射
             Ray ray = new Ray(controllerTip.position, controllerTip.forward);
@@ -275,8 +257,8 @@ public class MainManager : MonoBehaviour
                 {
                     freeChoiceTargetNode = hitObj;
                     ChangeObjColor(nodeSelectEffect, Color.white);
-                    audio_SE.PlayOneShot(clip_PreSelect);
-                    explainText.text = nodes[nodeDictionary[freeChoiceTargetNode.name]].explain;
+                    audio.Controller.SetAudioSE(audio.Model.Clip_PreSelect);
+                    explain.Controller.SetText(nodes[nodeDictionary[freeChoiceTargetNode.name]].explain);
                 }
             }
         }
@@ -379,15 +361,14 @@ public class MainManager : MonoBehaviour
             yield return null;
         }
         Destroy(pin);
-        stateProcessor.SetState(ST_Awake);
+        state.Controller.SetState(ST_Awake);
     }
 
     IEnumerator GameAwake()
     {
-        audio_Voice.PlayOneShot(clip_Intro);
+        audio.Controller.SetAudioVoice(audio.Model.Clip_Intro);
         yield return new WaitForSeconds(10f);
-        indicater.gameObject.SetActive(true);
-        explainText.text = "コントローラでクリックをしましょう";
+        explain.Controller.SetText("コントローラでクリックをしましょう");
         float startTime = Time.realtimeSinceStartup;
         isFirstPress = true;
         //トリガー待ち
@@ -398,8 +379,8 @@ public class MainManager : MonoBehaviour
 
             yield return null;
         }
-        explainText.text = string.Empty;
-        audio_SE.PlayOneShot(clip_worldMake);
+        explain.Controller.SetText(string.Empty);
+        audio.Controller.SetAudioSE(audio.Model.Clip_worldMake);
         //ジオラマの形成
         while (sphereDissolve.localScale.x < 6f)
         {
@@ -410,10 +391,9 @@ public class MainManager : MonoBehaviour
         firstOsakajoObj.SetActive(false);
         explainPanel.SetActive(true);
         Init();
-        audio_Voice.PlayOneShot(clip_OpeExplain);
+        audio.Controller.SetAudioVoice(audio.Model.Clip_OpeExplain);
         yield return new WaitForSeconds(5f);
-        explainText.text = "スタートボタンをクリックしましょう";
-
+        explain.Controller.SetText("スタートボタンをクリックしましょう");
     }
 
     IEnumerator PlaneLiftUp(Node node, float speed)
@@ -528,44 +508,15 @@ public class MainManager : MonoBehaviour
 
         headposeCanvas.SetActive(false);
     }
-
-    // 今回はつかわない
-    //IEnumerator TimeWatch()
-    //{
-    //    dateText.text = DateTime.Now.ToString("yyyy  MM/dd");
-    //    while (dateText.rectTransform.localPosition.y > 0.0587f)
-    //    {
-    //        dateText.rectTransform.localPosition += new Vector3(0, Time.deltaTime * -timeTransSpeed, 0);
-    //        yield return null;
-    //    }
-    //    yield return new WaitForSeconds(1);
-    //    timeText.text = DateTime.Now.ToString("HH:mm");
-    //    while (dateText.rectTransform.localPosition.y < 0.09f)
-    //    {
-    //        dateText.rectTransform.localPosition += new Vector3(0, Time.deltaTime * timeTransSpeed, 0);
-    //        timeText.rectTransform.localPosition += new Vector3(0, Time.deltaTime * -timeTransSpeed, 0);
-    //        yield return null;
-    //    }
-    //    yield return new WaitForSeconds(2);
-    //    while (timeText.rectTransform.localPosition.y < 0.09f)
-    //    {
-    //        timeText.rectTransform.localPosition += new Vector3(0, Time.deltaTime * timeTransSpeed, 0);
-    //        yield return null;
-    //    }
-
-    //    isTimeWatching = false;        
-    //}
     #endregion
 
     #region コントローラ関連
     /// <summary>
     /// マジックリープのトリガーが引かれた瞬間に処理がされる
     /// </summary>
-    public void ML_OnTriggerDown()
+    public void Nreal_OnTriggerDown()
     {
-        Ray ray = Application.isEditor ?
-                    Camera.main.ScreenPointToRay(Input.mousePosition) :
-                    new Ray(controllerTip.position, controllerTip.forward);
+        Ray ray = new Ray(controllerTip.position, controllerTip.forward);
         RaycastHit hitInfo;
 
         if (isAwakePress && Physics.Raycast(ray, out hitInfo, 10))
@@ -575,7 +526,7 @@ public class MainManager : MonoBehaviour
             if (tag == "NextWaitNode")
             {
                 //決定のSEを流す
-                audio_SE.PlayOneShot(clip_Select);
+                audio.Controller.SetAudioSE(audio.Model.Clip_Select);
                 //各ノードに割り振られた処理を開始
                 currentNode.process.Invoke();
                 //タグを変えることによる選択できないようにする
@@ -584,7 +535,7 @@ public class MainManager : MonoBehaviour
             else if (tag == "FreeChoiceNode")
             {
                 //決定のSEを流す
-                audio_SE.PlayOneShot(clip_Select);
+                audio.Controller.SetAudioSE(audio.Model.Clip_Select);
                 //セレクトエフェクトのカラーを決定色(Green)にする
                 ChangeObjColor(nodeSelectEffect, Color.green);
                 //選択したオブジェクトからノードを検索してcurrentNodeに設定
@@ -594,20 +545,20 @@ public class MainManager : MonoBehaviour
             else if (tag == "Init")
             {
                 //決定のSEを流す
-                audio_SE.PlayOneShot(clip_Select);
+                audio.Controller.SetAudioSE(audio.Model.Clip_Select);
                 StartCoroutine(On3DButtonDown(_3dRebootButton));
                 Init();
             }
             else if (tag == "Start")
             {
                 //決定のSEを流す
-                audio_SE.PlayOneShot(clip_Select);
+                audio.Controller.SetAudioSE(audio.Model.Clip_Select);
                 StartCoroutine(On3DButtonDown(_3dStartButton));
                 SetNodeEffect(NodeEffect.AUTO);
                 //ノードインディケーターを初期位置まで移動
                 StartCoroutine(ActiveNextNode(nodes[0]));
                 nodes[0].transform.tag = "NextWaitNode";
-                stateProcessor.SetState(ST_Play);
+                state.Controller.SetState(ST_Play);
             }
             else if (tag == "Gizmo")
             {
@@ -650,9 +601,9 @@ public class MainManager : MonoBehaviour
     /// <param name="node"></param>
     public void UpdateAudioAndUI(Node node)
     {
-        audio_SE.PlayOneShot(node.se);
-        audio_Voice.PlayOneShot(node.vc);
-        explainText.text = node.explain;
+        audio.Controller.SetAudioSE(node.se);
+        audio.Controller.SetAudioVoice(node.vc);
+        explain.Controller.SetText(node.explain);
     }
     #endregion
 
@@ -665,8 +616,7 @@ public class MainManager : MonoBehaviour
         }
         else
         {
-            if (isPinSetupped)
-                StartCoroutine(characterController.Wave());
+            if (isPinSetupped) return;
             else
             {
                 isPinSetupped = true;
@@ -684,7 +634,7 @@ public class MainManager : MonoBehaviour
         //イニシャライズボタンのアクティブ化
         _3dRebootButton.SetActive(true);
         //アップデートモードの変更
-        stateProcessor.SetState(ST_FreeChoice);
+        state.Controller.SetState(ST_FreeChoice);
         //タグを変える
         for (int i = 0; i < nodes.Length; i++)
             nodes[i].transform.tag = "FreeChoiceNode";

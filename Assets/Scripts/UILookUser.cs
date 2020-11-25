@@ -2,20 +2,27 @@
 
 public class UILookUser : MonoBehaviour
 {
-    [SerializeField] GameObject target;
-    [SerializeField] GameObject center;
-    [SerializeField] Transform ui;
-    void Update()
+    [SerializeField] private Transform _centralLocation;
+    [SerializeField] private float _canvasForwardDistance;
+    private Transform _camera;
+    private Transform _canvas;
+    private Vector3 forward;
+    private void Start()
     {
-        Vector3 aim = target.transform.position - ui.position;
-        var look = Quaternion.LookRotation(-aim);
-        ui.localRotation = look;
+        _camera = Camera.main.transform;
+        _canvas = transform;
+    }
+    private void Update()
+    {
+        // UIキャンバスがプレイヤーに向く
+        forward = _canvas.position - _camera.position;
+        _canvas.localRotation = Quaternion.LookRotation(forward);
 
-        aim = target.transform.position - center.transform.position;
-        aim.y *= 0;
-        float d = aim.magnitude;
-        d -= 1f;
-        d = Mathf.Clamp(d, 0.75f, d);
-        ui.transform.position = center.transform.position + aim.normalized * d;
+        // UIキャンバスがプレイヤー手前に追従する
+        forward = _camera.position - _centralLocation.position;
+        forward.y *= 0;
+        float distance = forward.magnitude - _canvasForwardDistance;
+        distance = distance < 0.75f ? 0.75f : distance;
+        _canvas.position = _centralLocation.position + forward.normalized * distance;
     }
 }
