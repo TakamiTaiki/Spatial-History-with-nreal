@@ -2,13 +2,14 @@
 
 public class UILookUser : MonoBehaviour
 {
-    [SerializeField] private Transform _centralLocation;
     [SerializeField] private float _canvasForwardDistance;
+    private Transform _centralLocation;
     private Transform _camera;
     private Transform _canvas;
     private Vector3 forward;
     private void Start()
     {
+        _centralLocation = GameObject.FindGameObjectWithTag("Center").transform;
         _camera = Camera.main.transform;
         _canvas = transform;
     }

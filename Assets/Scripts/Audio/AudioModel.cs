@@ -6,7 +6,7 @@ public class AudioModel
     public event AudioEvent OnAudioVoiceChanged;
     public AudioClip Clip_Select { get; private set; }
     public AudioClip Clip_PreSelect { get; private set; }
-    public AudioClip Clip_worldMake { get; private set; }
+    public AudioClip Clip_WorldMake { get; private set; }
     public AudioClip Clip_Intro { get; private set; }
     public AudioClip Clip_OpeExplain { get; private set; }
 
@@ -14,7 +14,7 @@ public class AudioModel
     {
         Clip_Select      = Resources.Load<AudioClip>("Audio/SE/Select");
         Clip_PreSelect   = Resources.Load<AudioClip>("Audio/SE/Select_pre");
-        Clip_worldMake   = Resources.Load<AudioClip>("Audio/SE/WorldMake");
+        Clip_WorldMake   = Resources.Load<AudioClip>("Audio/SE/WorldMake");
         Clip_Intro       = Resources.Load<AudioClip>("Audio/Voice/Intro");
         Clip_OpeExplain  = Resources.Load<AudioClip>("Audio/Voice/OpeExplain");
     }

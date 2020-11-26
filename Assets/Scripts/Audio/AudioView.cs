@@ -13,4 +13,14 @@ public class AudioView : MonoBehaviour
     {
         audio.PlayOneShot(clip);
     }
+
+    public bool IsPlaying()
+    {
+        return audio.isPlaying;
+    }
+
+    public void Stop()
+    {
+        audio.Stop();
+    }
 }

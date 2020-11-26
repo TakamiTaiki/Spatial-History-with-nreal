@@ -15,11 +15,11 @@ namespace Utils
         public static void Activate(GameObject obj) { if (!obj.activeSelf) obj.SetActive(true); }
         public static void DeActivate(GameObject obj) { if (obj.activeSelf) obj.SetActive(false); }
 
-        public static void SetStage         (int era, GameObject[] castles, GameObject[] planes)
+        public static void SetStage(int era, List<GameObject> castles, List<GameObject> planes)
         {
             // castles => [0]1931_First, [1]1585, [2]1585_Ash, [3]1626, [4]1626_Broken, [5]1931_End
             // planes  => [0]Transform, [1]Fire, [2]Restore_1626, [3]Restore_1931, [4]Top, [5]Bottom
-            GameObject plane_Top = planes[planes.Length-2], plane_Bottom = planes[planes.Length-1];
+            GameObject plane_Top = planes[planes.Count-2], plane_Bottom = planes[planes.Count-1];
 
             if (era == 1585)
             {

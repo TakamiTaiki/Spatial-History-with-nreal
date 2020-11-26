@@ -1,5 +1,9 @@
 ﻿using State;
 
+namespace State
+{
+    public delegate void StateUpdate(bool isFirst);
+}
 public class StateModel
 {
     public delegate void StateEvent(StateUpdate state);

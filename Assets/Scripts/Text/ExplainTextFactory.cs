@@ -6,7 +6,7 @@ public class ExplainTextFactory : MonoBehaviour
     private TextModel model;
     [SerializeField] private TextView view_Text;
     [SerializeField] private TextIndicatorView view_Indicator;
-    private void Start()
+    private void Awake()
     {
         this.model = new TextModel();
         this.Controller = new ExplainTextController(model, view_Text, view_Indicator);
