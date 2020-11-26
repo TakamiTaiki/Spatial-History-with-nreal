@@ -8319,7 +8319,7 @@ MonoBehaviour:
   startButton: {fileID: 1551494269}
   rebootButton: {fileID: 1473542000}
   planeStart: {fileID: 1468566764}
-  plane_UI: {fileID: 1468566764}
+  plane_UI: {fileID: 403379353}
 --- !u!1 &1256123409
 GameObject:
   m_ObjectHideFlags: 0
