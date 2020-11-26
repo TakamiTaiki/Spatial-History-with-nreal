@@ -6,10 +6,8 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using static Utils.Utility;
 
-
 public class MainManager : MonoBehaviour
 {
-    [SerializeField] private Transform planeStart;
     [SerializeField] private Transform contentRoot;
 
     private ExplainTextFactory explain;
@@ -17,11 +15,7 @@ public class MainManager : MonoBehaviour
     private AudioFactory audio;
     private StateFactory state;
     private FloatingMenuFactory menu;
-
-    private Vector3 shrinkScale = Vector3.one * 0.23f;
-    private Vector3 enlargeScale = Vector3.one * 1.5f;
-    private Quaternion eraTextRotation = Quaternion.Euler(0, 0, 0);
-
+    private MainUsecase usecase;
 
     private List<GameObject> castles = new List<GameObject>();
     private List<GameObject> planes = new List<GameObject>();
@@ -32,23 +26,15 @@ public class MainManager : MonoBehaviour
     [Serializable]
     public struct Node
     {
-        [Header("時代")]
         public int era;
-        [Header("年代テキスト")]
         public Transform eraText;
-        [Header("説明"), TextArea(1, 3)]
+        [TextArea(1, 3)]
         public string explain;
-        [Header("ボイス")]
         public AudioClip vc;
-        [Header("サウンドエフェクト")]
         public AudioClip se;
-        [Header("Nodeのトランスフォーム")]
         public Transform transform;
-        [Header("ディゾルブ用のパネル")]
         public Transform panel;
-        [Header("パネルのターゲット位置")]
         public Transform destination;
-        [Header("アセット")]
         public GameObject[] assets;
         [NonSerialized]
         public int myIndex;
@@ -66,6 +52,7 @@ public class MainManager : MonoBehaviour
         state.Controller.SetState(ST_Positioning);
         input = GetComponent<NrealInputFactory>();
         menu = GetComponent<FloatingMenuFactory>();
+        usecase = new MainUsecase();
         GameObject castles_Root = GameObject.Find("/ContentRoot/BuildDissolve/Castles");
         foreach (Transform child in castles_Root.transform) castles.Add(child.gameObject);
         castles.RemoveAt(0);
@@ -160,7 +147,7 @@ public class MainManager : MonoBehaviour
         Animation openAnim = contentRoot.GetComponent<Animation>();
         openAnim.Play("OpeningDissolveAnim");
         yield return new WaitWhile(() => openAnim.isPlaying);
-        Init();
+        Initialize();
         //audio.Controller.SetAudioVoice(audio.Controller.Model.Clip_OpeExplain);
         //yield return new WaitForSeconds(5f);
         explain.Controller.SetText("スタートボタンをクリックしましょう");
@@ -168,34 +155,11 @@ public class MainManager : MonoBehaviour
     #endregion
 
     #region スタンバイ
-    public void ST_Standby(bool isFirst)
-    {
-        //初期処理
-        if (isFirst)
-        {
-        }
-        //継続処理
-        else
-        {
-            // スタートボタンを押すまでのスタンバイ状態
-        }
-    }
+    public void ST_Standby(bool isFirst) { }
     #endregion
 
     #region プレイ
-    public void ST_Play(bool isFirst)
-    {
-        //初期処理
-        if (isFirst)
-        {
-
-        }
-        //継続処理
-        else
-        {
-            // コンテンツ中
-        }
-    }
+    public void ST_Play(bool isFirst) { }
     #endregion
 
     #region 自由選択
@@ -204,6 +168,13 @@ public class MainManager : MonoBehaviour
         //初期処理
         if (isFirst)
         {
+            DeActivate(menu.Controller.View.nodeIndicater);
+            Activate(menu.Controller.View.nodeSelectEffect);
+            //イニシャライズボタンのアクティブ化
+            Activate(menu.Controller.View.rebootButton);
+            //タグを変える
+            for (int i = 0; i < nodes.Length; i++)
+                nodes[i].transform.tag = "FreeChoiceNode";
         }
         //継続処理
         else
@@ -229,7 +200,7 @@ public class MainManager : MonoBehaviour
     {
         SetStage(node.era, castles, planes);
         PlayAudioAndSetText(node);
-        yield return PlaneLiftDown(node);
+        yield return usecase.PlaneLiftDown(node);
         if (state.Controller.Model.GameState == ST_FreeChoice) yield break;
         UpdateNode();
     }
@@ -243,16 +214,16 @@ public class MainManager : MonoBehaviour
         SetStage(node.era, castles, planes);
         PlayAudioAndSetText(node);
         //開戦
-        warAnim.SetActive(true);
-        yield return ReleaseArrow(node.assets[2], node.assets[3]);
+        Activate(warAnim);
+        yield return usecase.ReleaseArrow(node.assets[2], node.assets[3]);
 
         //着火
-        fire.SetActive(true);
-        yield return PlaneLiftDown(node);
+        Activate(fire);
+        yield return usecase.PlaneLiftDown(node);
 
         //鎮火、非アクティブ化
-        fire.SetActive(false);
-        warAnim.SetActive(false);
+        DeActivate(fire);
+        DeActivate(warAnim);
 
         if (state.Controller.Model.GameState == ST_FreeChoice) yield break;
         UpdateNode();
@@ -265,7 +236,7 @@ public class MainManager : MonoBehaviour
     {
         SetStage(node.era, castles, planes);
         PlayAudioAndSetText(node);
-        yield return PlaneLiftUp(node);
+        yield return usecase.PlaneLiftUp(node);
         if (state.Controller.Model.GameState == ST_FreeChoice) yield break;
         UpdateNode();
     }
@@ -277,23 +248,22 @@ public class MainManager : MonoBehaviour
     {
         GameObject lightnig = node.assets[0], cloud = node.assets[1], fire = node.assets[2];
         Transform dissolveShere = node.panel;
+        dissolveShere.localScale = Vector3.one * 0.0001f;
         SetStage(node.era, castles, planes);
         PlayAudioAndSetText(node);
         //落雷
-        lightnig.SetActive(true);
-        cloud.SetActive(true);
+        Activate(lightnig);
+        Activate(cloud);
+        DeActivate(fire);
         //落ちるまで待つ
         yield return new WaitForSeconds(1.74f);
         dissolveShere.localScale = Vector3.one * 0.334f;
         //火災
-        fire.SetActive(true);
+        Activate(fire);
         yield return new WaitForSeconds(2f);
-        //非アクティブなど
-        fire.SetActive(false);
-        dissolveShere.localScale = Vector3.one * 0.0001f;
-        lightnig.SetActive(false);
-        cloud.SetActive(false);
-        //castles[4].SetActive(false);
+
+        DeActivate(lightnig);
+        DeActivate(cloud);
         if (state.Controller.Model.GameState == ST_FreeChoice) yield break;
         UpdateNode();
     }
@@ -305,107 +275,13 @@ public class MainManager : MonoBehaviour
     {
         SetStage(node.era, castles, planes);
         PlayAudioAndSetText(node);
-        yield return PlaneLiftUp(node);
+        yield return usecase.PlaneLiftUp(node);
         if (state.Controller.Model.GameState == ST_FreeChoice) yield break;
         UpdateNode();
     }
     #endregion
 
-    #region サブルーチン
-
-    IEnumerator PlaneLiftUp(Node node)
-    {
-        Vector3 dir = Vector3.up * Time.deltaTime * 0.15f;
-        while (node.panel.position.y < node.destination.position.y)
-        {
-            node.panel.Translate(dir);
-            yield return null;
-        }
-    }
-
-    IEnumerator PlaneLiftDown(Node node)
-    {
-        Vector3 dir = Vector3.down * Time.deltaTime * 0.15f;
-        while (node.panel.position.y > node.destination.position.y)
-        {
-            node.panel.Translate(dir);
-            yield return null;
-        }
-    }
-
-    IEnumerator ActiveNextNode(Node node)
-    {
-        //縮小化
-        yield return Shrink();
-        //移動
-        float t = 0;
-        while (IsReaching(ref t, 0.001f, 0.1f))
-        {
-            menu.Controller.View.plane_UI.position = Vector3.Lerp(menu.Controller.View.plane_UI.position, node.transform.position, t);
-            yield return null;
-        }
-        //拡大化
-        yield return EnLarge(node);
-    }
-
-    IEnumerator Shrink()
-    {
-        float t = 0;
-        while (IsReaching(ref t, 0.02f, 1))
-        {
-            menu.Controller.View.nodeIndicater.transform.localScale = Vector3.Lerp(menu.Controller.View.nodeIndicater.transform.localScale, shrinkScale, t);
-            yield return null;
-        }
-    }
-
-    IEnumerator EnLarge(Node node)
-    {
-        float t = 0;
-        while (IsReaching(ref t, 0.02f, 1))
-        {
-            menu.Controller.View.nodeIndicater.transform.localScale = Vector3.Lerp(menu.Controller.View.nodeIndicater.transform.localScale, enlargeScale, t);
-            yield return null;
-        }
-
-        t = 0;
-        Activate(node.eraText.gameObject);
-        while (IsReaching(ref t, 0.02f, 1))
-        {
-            node.eraText.localRotation = Quaternion.Lerp(node.eraText.localRotation, eraTextRotation, t);
-            yield return null;
-        }
-    }
-
-    IEnumerator On3DButtonDown(GameObject button)
-    {
-        ChangeObjColor(button, Color.green);
-        yield return new WaitForSeconds(0.5f);
-        ChangeObjColor(button, Color.white);
-        button.SetActive(false);
-    }
-
-    IEnumerator ReleaseArrow(GameObject arrow1, GameObject arrow2)
-    {
-        Vector3 arrow1Pos = arrow1.transform.position;
-        Vector3 arrow2Pos = arrow2.transform.position;
-        yield return new WaitForSeconds(2f);
-        arrow1.SetActive(true);
-        arrow2.SetActive(true);
-        for (int i = 0; i < 20; i++)
-        {
-            arrow1.transform.Translate(0, 0.001f, 0.001f);
-            arrow2.transform.Translate(0, 0.001f, 0.001f);
-            yield return null;
-        }
-        arrow1.SetActive(false);
-        arrow2.SetActive(false);
-        arrow1.transform.position = arrow1Pos;
-        arrow2.transform.position = arrow2Pos;
-
-    }
-
-    #endregion
-
+    #region クリック別処理
     public void RunAnimation_Auto()
     {
         //決定のSEを流す
@@ -429,11 +305,12 @@ public class MainManager : MonoBehaviour
     {
         //決定のSEを流す
         audio.Controller.SetAudioSE(audio.Controller.Model.Clip_Select);
-        StartCoroutine(On3DButtonDown(menu.Controller.View.startButton));
-        SetNodeEffect(NodeEffect.AUTO);
+        StartCoroutine(usecase.On3DButtonDown(menu.Controller.View.startButton));
+        Activate(menu.Controller.View.nodeIndicater);
+        DeActivate(menu.Controller.View.nodeSelectEffect);
         //ノードインディケーターを初期位置まで移動
-        StartCoroutine(ActiveNextNode(nodes[0]));
-        nodes[0].transform.tag = "NextWaitNode";
+        StartCoroutine(usecase.ActivateNode(currentNode, menu.Controller.View));
+        currentNode.transform.tag = "NextWaitNode";
         state.Controller.SetState(ST_Play);
     }
 
@@ -441,12 +318,13 @@ public class MainManager : MonoBehaviour
     {
         //決定のSEを流す
         audio.Controller.SetAudioSE(audio.Controller.Model.Clip_Select);
-        StartCoroutine(On3DButtonDown(menu.Controller.View.rebootButton));
-        Init();
+        StartCoroutine(usecase.On3DButtonDown(menu.Controller.View.rebootButton));
+        Initialize();
     }
+    #endregion
 
     #region 初期化
-    public void Init()
+    public void Initialize()
     {
         Material nodeInactiveMaterial = Resources.Load("Materials/Node_NoneActiveColor") as Material;
         //タグと索引の初期化
@@ -461,16 +339,18 @@ public class MainManager : MonoBehaviour
         }
         currentNode = nodes[0];
 
-        Alignment(menu.Controller.View.plane_UI, planeStart);
+        Alignment(menu.Controller.View.plane_UI, menu.Controller.View.planeStart);
         SetStage(currentNode.era, castles, planes);
         explain.Controller.SetText(string.Empty);
         Activate(menu.Controller.View.startButton);
-        SetNodeEffect(NodeEffect.INIT);
+        DeActivate(menu.Controller.View.nodeIndicater);
+        DeActivate(menu.Controller.View.nodeSelectEffect);
 
         state.Controller.SetState(ST_Standby);
     }
     #endregion
 
+    #region ドラッグ処理
     public void MoveContent()
     {
         Vector3 forward = contentRoot.position - Camera.main.transform.position;
@@ -478,7 +358,7 @@ public class MainManager : MonoBehaviour
         contentRoot.rotation = Quaternion.LookRotation(forward);
         contentRoot.transform.position = input.Controller.View.GetRayTipPosition();
     }
-
+    #endregion
 
     #region ノードのアップデート関連
     public void UpdateNode()
@@ -489,14 +369,14 @@ public class MainManager : MonoBehaviour
         {
             currentNode = nodes[nextIndex];
             currentNode.transform.tag = "NextWaitNode";
-            StartCoroutine(ActiveNextNode(currentNode));
+            StartCoroutine(usecase.ActivateNode(currentNode, menu.Controller.View));
         }
         //最後のノードのイベントが終わったときはフリー選択モードとなる
         else
         {
             //パネルずらし
             menu.Controller.View.plane_UI.localPosition += Vector3.right;
-            FreeChoiceAvtivate();
+            state.Controller.SetState(ST_FreeChoice);
         }
     }
 
@@ -506,46 +386,5 @@ public class MainManager : MonoBehaviour
         audio.Controller.SetAudioVoice(node.vc);
         explain.Controller.SetText(node.explain);
     }
-    #endregion
-
-    #region その他の関数
-    /// <summary>
-    /// ストーリーモードからフリーチョイスモードへ
-    /// </summary>
-    public void FreeChoiceAvtivate()
-    {
-        SetNodeEffect(NodeEffect.FREE);
-        //イニシャライズボタンのアクティブ化
-        menu.Controller.View.rebootButton.SetActive(true);
-        //アップデートモードの変更
-        state.Controller.SetState(ST_FreeChoice);
-        //タグを変える
-        for (int i = 0; i < nodes.Length; i++)
-            nodes[i].transform.tag = "FreeChoiceNode";
-    }
-
-    public enum NodeEffect { INIT, AUTO, FREE }
-    public void SetNodeEffect(NodeEffect ne)
-    {
-        switch (ne)
-        {
-            case NodeEffect.INIT:
-                DeActivate(menu.Controller.View.nodeIndicater);
-                DeActivate(menu.Controller.View.nodeSelectEffect);
-                break;
-            case NodeEffect.AUTO:
-                Activate(menu.Controller.View.nodeIndicater);
-                DeActivate(menu.Controller.View.nodeSelectEffect);
-                break;
-            case NodeEffect.FREE:
-                DeActivate(menu.Controller.View.nodeIndicater);
-                Activate(menu.Controller.View.nodeSelectEffect);
-                break;
-            default:
-                break;
-        }
-    }
-
-    private bool IsReaching(ref float t, float inc, float max) { return Mathf.Clamp01(t += inc) < max; }
     #endregion
 }

@@ -11,6 +11,6 @@ public class FloatingMenuView : MonoBehaviour
     [SerializeField] public GameObject startButton;
     [SerializeField] public GameObject rebootButton;
 
-
+    [SerializeField] public Transform planeStart;
     [SerializeField] public Transform plane_UI;
 }
