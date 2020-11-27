@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5738372986074226432
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5738372986074226433}
+  - component: {fileID: 5738372986074226444}
+  - component: {fileID: 5738372986074226434}
+  m_Layer: 0
+  m_Name: OpeningDissolveSphere
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5738372986074226433
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5738372986074226432}
+  m_LocalRotation: {x: -0, y: 0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.09, y: 0.09, z: 0.09}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &5738372986074226444
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5738372986074226432}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &5738372986074226434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5738372986074226432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da6e3e32c3aba484c96889b2afe615ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  updateGlobal: 0
+  materials:
+  - {fileID: 2100000, guid: 25fba4ade989341ae8a5d64e5c543ed0, type: 2}
+  - {fileID: 2100000, guid: e5c423a72eb9d4a339462330be876127, type: 2}
+  - {fileID: 2100000, guid: d6e591acb0d204d57869f7b806115169, type: 2}
+  - {fileID: 2100000, guid: f1fb10dfdd297af41818938c7a04c047, type: 2}
+  sphere1: {fileID: 5738372986074226432}
+  sphere2: {fileID: 0}
+  sphere3: {fileID: 0}
+  sphere4: {fileID: 0}
+  invert: 1

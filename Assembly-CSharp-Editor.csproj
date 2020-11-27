@@ -63,11 +63,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Lightning\Plugins\Effect\Editor\EffectControllerInspector.cs" />
-    <Compile Include="Assets\Lightning\Plugins\Effect\Editor\EffectToolBar.cs" />
-    <Compile Include="Assets\Lightning\Plugins\Effect\Editor\RenderEffectInspector.cs" />
-    <Compile Include="Assets\Lightning\Plugins\Effect\Editor\ShaderCustomEditor\ShaderMaterialsEditor.cs" />
-    <Compile Include="Assets\Lightning\Plugins\Effect\Editor\XUIUtils.cs" />
     <Compile Include="Assets\NRSDK\Editor\Scripts\AndroidManifest.cs" />
     <Compile Include="Assets\NRSDK\Editor\Scripts\BackgroundJobExecutor.cs" />
     <Compile Include="Assets\NRSDK\Editor\Scripts\Emulator\NREditorSceneManager.cs" />
@@ -82,27 +77,32 @@
     <Compile Include="Assets\NRSDK\Editor\Scripts\TrackingImageDatabaseContextMenu.cs" />
     <Compile Include="Assets\NRSDK\Editor\Scripts\TrackingImageDatabaseInspector.cs" />
     <Compile Include="Assets\NRSDK\Editor\Scripts\TrackingImageDatabasePreprocessBuild.cs" />
-    <Compile Include="Assets\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\Basic\LegacyGUI.cs" />
-    <Compile Include="Assets\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\Basic\MetaGUI.cs" />
-    <Compile Include="Assets\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\Basic\OneDirectionalLightGUI.cs" />
-    <Compile Include="Assets\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\Basic\ParticleGUI.cs" />
-    <Compile Include="Assets\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\Basic\PhysicallyBasedGUI.cs" />
-    <Compile Include="Assets\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\Basic\ShadowGUI.cs" />
-    <Compile Include="Assets\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\Basic\TreeGUI.cs" />
-    <Compile Include="Assets\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\Basic\UnlitGUI.cs" />
-    <Compile Include="Assets\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\Basic\VertexLitGUI.cs" />
-    <Compile Include="Assets\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\MaterialProperties.cs" />
-    <Compile Include="Assets\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\SpeedTree\SpeedTreeGUI.cs" />
-    <Compile Include="Assets\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\Standard\StandardParticlesShaderGUI.cs" />
-    <Compile Include="Assets\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\Standard\StandardRoughnessShaderGUI.cs" />
-    <Compile Include="Assets\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\Standard\StandardShaderGUI.cs" />
-    <Compile Include="Assets\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\TextMesh Pro\TMP_BitmapShaderGUI.cs" />
-    <Compile Include="Assets\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\TextMesh Pro\TMP_SDFShaderGUI.cs" />
-    <Compile Include="Assets\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\TextMesh Pro\TMP_SpriteGUI.cs" />
-    <Compile Include="Assets\VacuumShaders\Advanced Dissolve\Editor\PropertyDrawer\CutoutDrawer.cs" />
-    <Compile Include="Assets\VacuumShaders\Advanced Dissolve\Editor\PropertyDrawer\PositiveFloatDrawer.cs" />
-    <Compile Include="Assets\VacuumShaders\Advanced Dissolve\Editor\PropertyDrawer\UVScrollDrawer.cs" />
-    <Compile Include="Assets\VacuumShaders\Advanced Dissolve\Editor\PropertyDrawer\V3Drawer.cs" />
+    <Compile Include="Assets\Resources\Lightning\Plugins\Effect\Editor\EffectControllerInspector.cs" />
+    <Compile Include="Assets\Resources\Lightning\Plugins\Effect\Editor\EffectToolBar.cs" />
+    <Compile Include="Assets\Resources\Lightning\Plugins\Effect\Editor\RenderEffectInspector.cs" />
+    <Compile Include="Assets\Resources\Lightning\Plugins\Effect\Editor\ShaderCustomEditor\ShaderMaterialsEditor.cs" />
+    <Compile Include="Assets\Resources\Lightning\Plugins\Effect\Editor\XUIUtils.cs" />
+    <Compile Include="Assets\Resources\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\Basic\LegacyGUI.cs" />
+    <Compile Include="Assets\Resources\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\Basic\MetaGUI.cs" />
+    <Compile Include="Assets\Resources\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\Basic\OneDirectionalLightGUI.cs" />
+    <Compile Include="Assets\Resources\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\Basic\ParticleGUI.cs" />
+    <Compile Include="Assets\Resources\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\Basic\PhysicallyBasedGUI.cs" />
+    <Compile Include="Assets\Resources\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\Basic\ShadowGUI.cs" />
+    <Compile Include="Assets\Resources\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\Basic\TreeGUI.cs" />
+    <Compile Include="Assets\Resources\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\Basic\UnlitGUI.cs" />
+    <Compile Include="Assets\Resources\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\Basic\VertexLitGUI.cs" />
+    <Compile Include="Assets\Resources\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\MaterialProperties.cs" />
+    <Compile Include="Assets\Resources\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\SpeedTree\SpeedTreeGUI.cs" />
+    <Compile Include="Assets\Resources\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\Standard\StandardParticlesShaderGUI.cs" />
+    <Compile Include="Assets\Resources\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\Standard\StandardRoughnessShaderGUI.cs" />
+    <Compile Include="Assets\Resources\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\Standard\StandardShaderGUI.cs" />
+    <Compile Include="Assets\Resources\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\TextMesh Pro\TMP_BitmapShaderGUI.cs" />
+    <Compile Include="Assets\Resources\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\TextMesh Pro\TMP_SDFShaderGUI.cs" />
+    <Compile Include="Assets\Resources\VacuumShaders\Advanced Dissolve\Editor\CustomEditors\TextMesh Pro\TMP_SpriteGUI.cs" />
+    <Compile Include="Assets\Resources\VacuumShaders\Advanced Dissolve\Editor\PropertyDrawer\CutoutDrawer.cs" />
+    <Compile Include="Assets\Resources\VacuumShaders\Advanced Dissolve\Editor\PropertyDrawer\PositiveFloatDrawer.cs" />
+    <Compile Include="Assets\Resources\VacuumShaders\Advanced Dissolve\Editor\PropertyDrawer\UVScrollDrawer.cs" />
+    <Compile Include="Assets\Resources\VacuumShaders\Advanced Dissolve\Editor\PropertyDrawer\V3Drawer.cs" />
     <Reference Include="UnityEditor.TestRunner">
       <HintPath>C:/Users/takam/Unity Project/Spatial History with nreal/Library/ScriptAssemblies/UnityEditor.TestRunner.dll</HintPath>
     </Reference>
@@ -350,7 +350,7 @@
       <HintPath>C:/Users/takam/Unity Project/Spatial History with nreal/Assets/NRSDK/Scripts/Sharing/Plugins/x64/protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="VacuumShaders">
-      <HintPath>C:/Users/takam/Unity Project/Spatial History with nreal/Assets/VacuumShaders/Editor/VacuumShaders.dll</HintPath>
+      <HintPath>C:/Users/takam/Unity Project/Spatial History with nreal/Assets/Resources/VacuumShaders/Editor/VacuumShaders.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>C:/Users/takam/Unity Project/Spatial History with nreal/Library/PackageCache/com.unity.ext.nunit@1.0.0/net35/unity-custom/nunit.framework.dll</HintPath>
